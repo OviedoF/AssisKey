@@ -1,20 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { DataProvider } from "./src/context/dataContext";
+import { NativeRouter } from 'react-router-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AppRouter from './src/router/AppRouter';
+import SnackbarComponent from './src/components/SnackbarComponent';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <DataProvider>
+      <NativeRouter>
+        <SafeAreaProvider>
+          <AppRouter />
+          <SnackbarComponent />
+        </SafeAreaProvider>
+      </NativeRouter>
+    </DataProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

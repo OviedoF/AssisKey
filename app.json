@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "assiskey",
+    "name": "AssisKey",
     "slug": "assiskey",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,16 +15,53 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bms.assiskey"
     },
     "android": {
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyClYwasQvblGLZZKZcVLPjuGoRgdIKVV1Q"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.bms.assiskey"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "be172907-3ceb-48ce-b809-fd8867b23e82"
+      }
+    },
+    "owner": "zethragg12"
   }
 }
