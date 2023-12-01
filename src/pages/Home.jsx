@@ -19,6 +19,7 @@ export default function Home() {
   const [userImage, setUserImage] = useState('')
   const navigate = useNavigate()
   const { user, setSnackbar, setLoading, qrForEntry, setQrForEntry } = useContext(dataContext)
+  console.log(user)
 
   const getData = async () => {
     try {
@@ -150,14 +151,14 @@ export default function Home() {
   const optionsRadio = useMemo(
     () => [
       {
-        id: 1,
-        label: "Geolocalización",
-        value: "geo",
-      },
-      {
         id: 2,
         label: "QR",
         value: "qr",
+      },
+      {
+        id: 1,
+        label: "Geolocalización",
+        value: "geo",
       },
     ],
     []

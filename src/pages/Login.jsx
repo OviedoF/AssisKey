@@ -29,7 +29,16 @@ export default function Login() {
 
       const response = await petitions.login(form)
 
-      if (!response.data.length) {
+      if(!response.data.empresas) {
+        setLoading(false)
+        return setSnackbar({
+          visible: true,
+          text: 'Este usuario no tiene empresas asignadas',
+          type: 'error'
+        })
+      }
+
+      if (!response.data.usuario || !response.data.usuario.idUsuario) {
         setLoading(false)
         return setSnackbar({
           visible: true,
@@ -38,31 +47,21 @@ export default function Login() {
         })
       }
 
-      if(response.data.length > 1) {
+      if(response.data.empresas.length > 1) {
         setUser({
           clave: form.clave,
-          empresas: response.data,
-          auxUser: form.usuario
+          empresas: response.data.empresas,
+          ...response.data.usuario,
+          username: form.usuario,
         })
-        setLoading(false)
 
+        setLoading(false)
         return navigate(routes.chooseEnterprise)
       }
 
-      const loginInfo = response.data[0];
-      const document = await AsyncStorage.getItem('document');
-      const verifyCode = await AsyncStorage.getItem('password');
-
-      const userReq = await petitions.getUserInfo({
-        dni: document,
-        codigo: verifyCode,
-        idDB: loginInfo.idEmpresa,
-        Authorization: loginInfo.token
-      });
-
       setUser({
-        ...response.data[0],
-        ...userReq.data[0],
+        ...response.data.usuario,
+        ...response.data.empresas[0],
         clave: form.clave,
       })
 
@@ -76,8 +75,9 @@ export default function Login() {
 
       setLoading(false)
 
-      return navigate(routes.home)
+      return navigate(routes.init)
     } catch (error) {
+      console.log(error)
       setLoading(false)
       setSnackbar({
         visible: true,

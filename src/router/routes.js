@@ -1,6 +1,6 @@
 export default {
-    init: "/",
-    login: "/login",
+    init: "/init",
+    login: "/",
     home: "/home",
     historial: "/historial",
     map: "/map",
@@ -9,4 +9,9 @@ export default {
     security: "/security",
     qr: "/qr",
     chooseEnterprise: "/chooseEnterprise",
+    personalData: "/personalData",
+    configuration: "/configuration",
+    operar: "/operar",
+    incidencias: "/incidencias",
+    crearIncidencia: "/crear-incidencia",
 }

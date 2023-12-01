@@ -11,6 +11,12 @@ export const DataProvider = ({ children }) => {
   })
   const [loading, setLoading] = useState(false)
   const [qrForEntry, setQrForEntry] = useState(false)
+  const [dangerModal, setDangerModal] = useState({
+    visible: false,
+    title: "",
+    text: "",
+    buttons: [],
+  })
 
   return (
     <dataContext.Provider
@@ -22,7 +28,9 @@ export const DataProvider = ({ children }) => {
         loading,
         setLoading,
         qrForEntry,
-        setQrForEntry
+        setQrForEntry,
+        dangerModal,
+        setDangerModal,
       }}
     >
       {children}

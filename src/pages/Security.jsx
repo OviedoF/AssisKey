@@ -92,38 +92,6 @@ export default function Account() {
 
   return (
     <View style={[styles.mainWhite]}>
-
-      <View style={[styles.flexRow, {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: Dimensions.get('window').width,
-        height: 70,
-        marginBottom: 40
-      }]}>
-        <TouchableOpacity style={[styles.flexColumn, {
-          width: '50%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          borderBottomColor: colors.black,
-          borderBottomWidth: 1,
-        }]} onPress={() => navigate(routes.account)}>
-          <Text>Datos personales</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.flexColumn, {
-          width: '50%',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          borderBottomColor: colors.black,
-          borderBottomWidth: 1,
-          backgroundColor: colors.gray
-        }]} onPress={() => navigate(routes.security)}>
-          <Text>Seguridad</Text>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.flexColumn}>
         <Text style={styles.label}>Contraseña actual:</Text>
         <TextInput style={styles.input} placeholder='Contraseña actual' secureTextEntry value={form.oldPassword} onChangeText={

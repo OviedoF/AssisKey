@@ -8,13 +8,14 @@ import { dataContext } from '../context/dataContext'
 import ReplaceWithLoading from '../components/ReplaceWithLoading'
 import axios from 'axios'
 import petitions from '../api/calls'
+import Navbar from '../components/Navbar'
 
-export default function Init() {
+export default function Configuration() {
     const { setSnackbar, setLoading, user, setUser } = useContext(dataContext)
     const navigate = useNavigate()
     const [form, setForm] = useState({
-        document: '',
-        password: ''
+        document: user.nroDocIde,
+        password: user.password
     })
 
     const handleSaveData = async () => {
@@ -58,7 +59,7 @@ export default function Init() {
             })
 
             setLoading(false)
-            navigate(routes.home)
+            navigate(routes.account)
         } catch (error) {
             console.log(error)
             setLoading(false)
@@ -70,45 +71,6 @@ export default function Init() {
         }
     }
 
-    useState(() => {
-        const checkIfDocumentExists = async () => {
-            setLoading(true)
-            const document = await AsyncStorage.getItem('document')
-            const password = await AsyncStorage.getItem('password')
-
-            const verify = await petitions.getUserInfo({
-                dni: document,
-                codigo: password,
-                idDB: user.idEmpresa,
-                Authorization: user.token
-            })
-
-            if (verify.data[0] && verify.data[0] === "Empleado no encontrado") {
-                setLoading(false)
-                setForm({
-                    document: document,
-                    password: password
-                })
-
-                return setSnackbar({
-                    visible: true,
-                    type: 'error',
-                    text: '¡Tienes un documento no válido para esta empresa!'
-                })
-            }  
-
-            setUser({
-                ...user,
-                ...verify.data[0]
-            })
-
-            setLoading(false)
-            if (document) return navigate(routes.home)
-        }
-
-        checkIfDocumentExists()
-    }, [])
-
     return (
         <View style={[styles.mainWhite]}>
             <ReplaceWithLoading>
@@ -119,7 +81,9 @@ export default function Init() {
                             ...form,
                             document: value
                         })
-                    }} />
+                    }} value={
+                        form.document
+                    } />
 
                     <Text style={[styles.label, {
                         marginTop: 20
@@ -130,7 +94,7 @@ export default function Init() {
                             ...form,
                             password: value
                         })
-                    }} />
+                    }} value={form.password} />
 
                     <TouchableOpacity style={[styles.button, {
                         marginTop: 20
@@ -139,6 +103,8 @@ export default function Init() {
                     </TouchableOpacity>
                 </View>
             </ReplaceWithLoading>
+
+            <Navbar />
         </View>
     )
 }

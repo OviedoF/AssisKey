@@ -10,6 +10,11 @@ import Camera from "../pages/Camera";
 import Security from "../pages/Security";
 import QRToScan from "../pages/QRToScan";
 import ChoseEnterprise from "../pages/ChoseEnterprise";
+import PersonalData from "../pages/PersonalData";
+import Configuration from "../pages/Configuration";
+import Operar from "../pages/Operar";
+import Incidencias from "../pages/incidencias/Incidencias";
+import Crear from "../pages/incidencias/Crear";
 
 const AppRouter = () => {
   return (
@@ -24,6 +29,11 @@ const AppRouter = () => {
       <Route exact path={routes.security} element={<Security />} />
       <Route exact path={routes.qr} element={<QRToScan />} />
       <Route exact path={routes.chooseEnterprise} element={<ChoseEnterprise />} />
+      <Route exact path={routes.personalData} element={<PersonalData />} />
+      <Route exact path={routes.configuration} element={<Configuration />} />
+      <Route exact path={routes.operar} element={<Operar />} />
+      <Route exact path={routes.incidencias} element={<Incidencias />} />
+      <Route exact path={routes.crearIncidencia} element={<Crear />} />
     </Routes>
   );
 };

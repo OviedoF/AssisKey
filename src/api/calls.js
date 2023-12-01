@@ -21,7 +21,7 @@ petitions.login = ({usuario, clave}) => {
     }
 }
 
-petitions.getUserInfo = (form, token) => {
+petitions.getUserInfo = (form) => {
     try {
         const data = request.get(`/empleado`, {
             headers: {
@@ -94,6 +94,92 @@ petitions.updateUser = (form) => {
 petitions.updatePassword = (form) => {
     try {
         const data = request.get(`/updatePassword`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+petitions.verifyDocument = (form) => {
+    try {
+        const data = request.get(`/empleado`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+petitions.permisoListado = (form) => {
+    try {
+        const data = request.get(`/permisolistado`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+petitions.getHorarios = (form) => {
+    try {
+        const data = request.get(`/horarioTrabajador`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+petitions.getMotivos = (form) => {
+    try {
+        const data = request.get(`/motivos`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+petitions.getEstados = (form) => {
+    try {
+        const data = request.get(`/estados`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    
+    }
+    catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+petitions.crearPermiso = (form) => {
+    try {
+        const data = request.get(`/permiso`, {
             headers: {
                 ...form,
             }

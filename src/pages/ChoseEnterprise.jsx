@@ -18,33 +18,23 @@ export default function ChoseEnterprise() {
     const handleChooseEnterprise = async (empresa) => {
         try {
             setLoading(true)
-            const document = await AsyncStorage.getItem('document');
-            const verifyCode = await AsyncStorage.getItem('password');
-
-            const userReq = await petitions.getUserInfo({
-                dni: document,
-                codigo: verifyCode,
-                idDB: empresa.idEmpresa,
-                Authorization: empresa.token
-            });
 
             setUser({
                 ...user,
                 ...empresa,
-                ...userReq.data[0],
             })
 
-            await AsyncStorage.setItem('username', user.auxUser)
+            await AsyncStorage.setItem('username', user.username)
 
             setSnackbar({
                 visible: true,
-                text: `Ingreso éxitoso, ¡Bienvenido ${user.auxUser}!`,
+                text: `Ingreso éxitoso, ¡Bienvenido ${user.username}!`,
                 type: 'success'
             })
 
             setLoading(false)
 
-            return navigate(routes.home)
+            return navigate(routes.init)
         } catch (error) {
             console.log(error)
             setLoading(false)
@@ -77,7 +67,7 @@ export default function ChoseEnterprise() {
                 marginBottom: 20,
                 color: colors.black,
                 opacity: .9,
-            }]}>¡Hola, {user.auxUser}! </Text>
+            }]}>¡Hola, {user.username}! </Text>
 
             <Text style={[styles.subtitle, {
                 marginBottom: 20,
