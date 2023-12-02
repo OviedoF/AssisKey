@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import styles from '../styles/styles'
 import { useNavigate } from 'react-router-native'
 import routes from '../router/routes'
@@ -13,13 +13,12 @@ import ReplaceWithLoading from '../components/ReplaceWithLoading'
 import { Buffer } from 'buffer'
 
 export default function Home() {
-  const [optionSelected, setOptionSelected] = useState(1)
+  const [optionSelected, setOptionSelected] = useState(2)
   const [assistIndicator, setAssistIndicator] = useState(null)
   const [userInfo, setUserInfo] = useState({})
   const [userImage, setUserImage] = useState('')
   const navigate = useNavigate()
-  const { user, setSnackbar, setLoading, qrForEntry, setQrForEntry } = useContext(dataContext)
-  console.log(user)
+  const { user, setSnackbar, setLoading, setQrForEntry } = useContext(dataContext)
 
   const getData = async () => {
     try {

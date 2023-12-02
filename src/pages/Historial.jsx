@@ -106,6 +106,16 @@ export default function Home() {
       width: Dimensions.get('window').width,
       minHeight: Dimensions.get('window').height - 100,
     }]}>
+      <Text style={{
+        width: '100%',
+        borderBottomColor: '#E2EFF7',
+        borderBottomWidth: 1,
+        paddingBottom: 10,
+        textAlign: 'center',
+        marginBottom: 20,
+      }}>
+        Registro de Asistencia
+      </Text>
 
       <View style={[styles.flexRow, {
         alignItems: 'center',

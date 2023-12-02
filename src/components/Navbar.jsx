@@ -17,7 +17,7 @@ export default function Navbar({position = "absolute"}) {
   return (
     <View style={{
       position: position,
-      bottom: 0,
+      bottom: position == "absolute" ? 0 : -30,
       left: 0,
       width: Dimensions.get('window').width,
       margin: 0,

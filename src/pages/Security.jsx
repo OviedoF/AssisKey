@@ -86,10 +86,6 @@ export default function Account() {
     }
   }
 
-  useEffect(() => {
-    console.log(form)
-  }, [form])
-
   return (
     <View style={[styles.mainWhite]}>
       <View style={styles.flexColumn}>

@@ -11,7 +11,6 @@ import {faUser} from '@fortawesome/free-regular-svg-icons'
 import Navbar from '../components/Navbar'
 
 export default function ChoseEnterprise() {
-  const { user, setUser } = useContext(dataContext)
   const navigate = useNavigate()
 
   return (
@@ -19,6 +18,18 @@ export default function ChoseEnterprise() {
       position: 'relative',
       justifyContent: 'flex-start',
     }]}>
+      
+      <Text style={{
+        width: '100%',
+        borderBottomColor: '#E2EFF7',
+        borderBottomWidth: 1,
+        paddingBottom: 10,
+        textAlign: 'center',
+        marginBottom: 20,
+      }}>
+        Operaciones 
+      </Text>
+
         <TouchableOpacity style={styleSheet.section} onPress={() => navigate(routes.incidencias)}>
 
           <Text style={{

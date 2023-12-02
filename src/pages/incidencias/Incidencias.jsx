@@ -44,11 +44,9 @@ export default function Home() {
                 })
             })
 
-            console.log(aux)
-
             setLoading(false)
             setAllData(aux)
-            return setData(aux.slice((page - 1) * 6, page * 6))
+            return setData(aux.slice((page - 1) * 5, page * 5))
         } catch (error) {
             console.log(error)
             setLoading(false)
@@ -122,6 +120,16 @@ export default function Home() {
             width: Dimensions.get('window').width,
             minHeight: Dimensions.get('window').height - 100,
         }]}>
+                        <Text style={{
+                width: '100%',
+                borderBottomColor: '#E2EFF7',
+                borderBottomWidth: 1,
+                paddingBottom: 20,
+                textAlign: 'center',
+                marginBottom: 20,
+            }}>
+                Permisos e incidentes
+            </Text>
 
             <View style={[styles.flexRow, {
                 alignItems: 'center',
@@ -275,13 +283,13 @@ export default function Home() {
                     alignItems: 'center',
                     justifyContent: 'center',
                 }]} onPress={() => {
-                    if (allData.length / 6 <= page) return
+                    if (allData.length / 5 <= page) return
                     setPage(page + 1)
                 }} disabled={
-                    allData.length / 6 < page
+                    allData.length / 5 < page
                 }>
                     <FontAwesomeIcon color={
-                        allData.length / 6 <= page ? '#00000050' : colors.black
+                        allData.length / 5 <= page ? '#00000050' : colors.black
                     } icon={faAngleRight} size={20} />
                 </TouchableOpacity>
             </View>

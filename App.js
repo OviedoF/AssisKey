@@ -14,18 +14,9 @@ export default function App() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}>
           <SafeAreaProvider>
-            <ScrollView
-              contentContainerStyle={{
-                height: Dimensions.get('screen').height,
-                width: Dimensions.get('window').width,
-                paddingVertical: 10,
-              }}
-              keyboardShouldPersistTaps="handled"
-            >
               <AppRouter />
               <SnackbarComponent />
               <DangerModal />
-            </ScrollView>
           </SafeAreaProvider>
         </KeyboardAvoidingView>
       </NativeRouter>

@@ -26,6 +26,7 @@ export default function Crear() {
     const [horario, setHorario] = useState('')
     const [motivos, setMotivos] = useState([])
     const [observacion, setObservacion] = useState('')
+    const [observacionAbierto, setObservacionAbierto] = useState(false)
     const navigate = useNavigate()
     const { user, setUser, setSnackbar, setLoading, setDangerModal } = useContext(dataContext)
     const [form, setForm] = useState({
@@ -65,8 +66,6 @@ export default function Crear() {
                     value: horario.idHorario
                 }))
 
-                console.log(horarios)
-
                 setHorarios(horarios)
             } catch (error) {
                 console.log(error)
@@ -99,7 +98,6 @@ export default function Crear() {
                     value: motivo.id
                 }))
 
-                console.log(motivos)
                 setMotivos(motivos)
             } catch (error) {
                 console.log(error)
@@ -117,27 +115,12 @@ export default function Crear() {
         getDocument()
     }, [])
 
-    useEffect(() => {
-        console.log(initDate)
-    }, [initDate])
-
     const handleSaveData = async () => {
         try {
             setLoading(true)
             const fInicio = `${initDate.date.toLocaleDateString().replaceAll('/', '-')} ${initDate.time.split(' ')[0]}`
             const fFin = `${endDate.date.toLocaleDateString().replaceAll('/', '-')} ${endDate.time.split(' ')[0]}`
 
-            console.log({
-                idTrabajador: user.id,
-                fInicio,
-                fFin,
-                estado: "1",
-                idMotivo: motivo,
-                idHorario: horario,
-                idDB: user.idEmpresa,
-                Authorization: user.token,
-                observacion,
-            })
             setLoading(false)
 
             const create = await petitions.crearPermiso({
@@ -152,7 +135,7 @@ export default function Crear() {
                 observacion,
             })
 
-            if(create.data[0].cod === 'Okey') {
+            if (create.data[0].cod === 'Okey') {
                 setLoading(false)
                 return setSnackbar({
                     visible: true,
@@ -172,8 +155,19 @@ export default function Crear() {
     }
 
     return (
-        <View style={[styles.mainWhite]}>
+        <View style={[styles.mainWhite]} keyboardShouldPersistTaps="handled">
 
+
+            <Text style={{
+                width: '100%',
+                borderBottomColor: '#E2EFF7',
+                borderBottomWidth: 1,
+                paddingBottom: 20,
+                textAlign: 'center',
+                marginBottom: 20,
+            }}>
+                Permisos e incidentes
+            </Text>
             <View style={[styles.flexRow, {
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -205,184 +199,195 @@ export default function Crear() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.flexColumn}>
-                <Text style={styles.label}>Fecha y Hora de inicio:</Text>
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    marginBottom: 20,
-                }}>
-                    <TouchableOpacity style={{
-                        ...styles.input,
-                        width: '49%',
-                        justifyContent: 'center',
-                    }} onPress={() => setOpenModal({
-                        init: true,
-                    })}>
-                        <Text>{
-                            initDate.date.toLocaleDateString()
-                        }</Text>
-                    </TouchableOpacity>
+            <ScrollView>
 
-                    <TouchableOpacity style={{
-                        ...styles.input,
-                        width: '49%',
-                        justifyContent: 'center',
-                    }} onPress={() => setOpenModal({
-                        initTime: true,
-                    })}>
-                        <Text>{
-                            initDate.time
-                        }</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {openModal.init && <DateTimePicker
-                    value={initDate.date}
-                    display='default'
-                    onChange={(e, date) => {
-                        setOpenModal(false)
-                        setInitDate({
-                            ...initDate,
-                            date
-                        })
-                    }}
-                    onTouchCancel={() => setOpenModal(false)}
-                />}
-
-                {openModal.initTime && <DateTimePicker
-                    value={initDate.date}
-                    display='default'
-                    mode='time'
-                    onChange={(e, date) => {
-                        setOpenModal(false)
-                        setInitDate({
-                            ...initDate,
-                            time: date.toLocaleTimeString()
-                        })
-                    }}
-                    onTouchCancel={() => setOpenModal(false)}
-                />}
-
-                <Text style={styles.label}>Fecha y Hora de fin:</Text>
-                <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    marginBottom: 20,
-                }}>
-                    <TouchableOpacity style={{
-                        ...styles.input,
-                        width: '49%',
-                        justifyContent: 'center',
-                    }} onPress={() => setOpenModal({
-                        end: true,
-                    })}>
-                        <Text>{
-                            endDate.date.toLocaleDateString()
-                        }</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{
-                        ...styles.input,
-                        width: '49%',
-                        justifyContent: 'center',
-                    }} onPress={() => setOpenModal({
-                        endTime: true,
-                    })}>
-                        <Text>{
-                            endDate.time
-                        }</Text>
-                    </TouchableOpacity>
-
-                </View>
-
-                {openModal.end && <DateTimePicker
-                    value={endDate.date}
-                    display='default'
-                    onChange={(e, date) => {
-                        setOpenModal(false)
-                        setEndDate({
-                            ...endDate,
-                            date
-                        })
-                    }}
-                    onTouchCancel={() => setOpenModal(false)}
-                    minimumDate={initDate.date}
-                />}
-
-                {openModal.endTime && <DateTimePicker
-                    value={endDate.date}
-                    display='default'
-                    mode='time'
-                    onChange={(e, date) => {
-                        setOpenModal(false)
-                        setEndDate({
-                            ...endDate,
-                            time: date.toLocaleTimeString()
-                        })
-                    }}
-                    onTouchCancel={() => setOpenModal(false)}
-                />}
-
-                <Text style={styles.label}>Motivo:</Text>
-                <CustomPicker options={motivos} onValueChange={(value) => setMotivo(value)} selectedValue={motivo} placeHolder={motivo ?
-                    motivos.find((motivoL) => motivoL.value.toString() === motivo.toString()).label :
-                    `Seleccione un motivo`
-                } />
-
-
-                <Text style={styles.label}>Horario:</Text>
-                <CustomPicker options={horarios} onValueChange={(value) => setHorario(value)} selectedValue={horario} placeHolder={
-                    horario ?
-                        horarios.find((horarioL) => horarioL.value.toString() === horario.toString()).label :
-                        `Seleccione un horario`
-                } />
-
-                <Text style={styles.label}>Observación:</Text>
-                <TextInput
-                    style={{
-                        ...styles.input,
-                        height: 60,
-                    }}
-                    onChangeText={(text) => setObservacion(text)}
-                    value={form.observacion}
-                    placeholder='Observación'
-                    placeholderTextColor={colors.gray}
-                    multiline={true}
-                />
-
-                <ReplaceWithLoading>
-                    <TouchableOpacity style={[styles.buttonAlt, {
-                        marginVertical: 20,
-                    }]} onPress={() => {
-                        setDangerModal({
-                            visible: true,
-                            title: 'Guardar cambios',
-                            text: '¿Está seguro que desea guardar estos cambios?',
-                            bg: colors.white,
-                            color: colors.black,
-                            buttons: [
-                                {
-                                    text: 'Cancelar',
-                                    onPress: () => setDangerModal({ visible: false })
-                                },
-                                {
-                                    text: 'Aceptar',
-                                    onPress: () => handleSaveData()
-                                }
-                            ]
-                        })
+                <View style={styles.flexColumn}>
+                    <Text style={styles.label}>Fecha y Hora de inicio:</Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        marginBottom: 20,
                     }}>
-                        <Text style={styles.buttonText}>Guardar cambios</Text>
-                    </TouchableOpacity>
-                </ReplaceWithLoading>
-            </View>
+                        <TouchableOpacity style={{
+                            ...styles.input,
+                            width: '49%',
+                            justifyContent: 'center',
+                        }} onPress={() => setOpenModal({
+                            init: true,
+                        })}>
+                            <Text>{
+                                initDate.date.toLocaleDateString()
+                            }</Text>
+                        </TouchableOpacity>
 
-            <Navbar />
+                        <TouchableOpacity style={{
+                            ...styles.input,
+                            width: '49%',
+                            justifyContent: 'center',
+                        }} onPress={() => setOpenModal({
+                            initTime: true,
+                        })}>
+                            <Text>{
+                                initDate.time
+                            }</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {openModal.init && <DateTimePicker
+                        value={initDate.date}
+                        display='default'
+                        onChange={(e, date) => {
+                            setOpenModal(false)
+                            setInitDate({
+                                ...initDate,
+                                date
+                            })
+                        }}
+                        onTouchCancel={() => setOpenModal(false)}
+                    />}
+
+                    {openModal.initTime && <DateTimePicker
+                        value={initDate.date}
+                        display='default'
+                        mode='time'
+                        onChange={(e, date) => {
+                            setOpenModal(false)
+                            setInitDate({
+                                ...initDate,
+                                time: date.toLocaleTimeString()
+                            })
+                        }}
+                        onTouchCancel={() => setOpenModal(false)}
+                    />}
+
+                    <Text style={styles.label}>Fecha y Hora de fin:</Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        marginBottom: 20,
+                    }}>
+                        <TouchableOpacity style={{
+                            ...styles.input,
+                            width: '49%',
+                            justifyContent: 'center',
+                        }} onPress={() => setOpenModal({
+                            end: true,
+                        })}>
+                            <Text>{
+                                endDate.date.toLocaleDateString()
+                            }</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{
+                            ...styles.input,
+                            width: '49%',
+                            justifyContent: 'center',
+                        }} onPress={() => setOpenModal({
+                            endTime: true,
+                        })}>
+                            <Text>{
+                                endDate.time
+                            }</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+                    {openModal.end && <DateTimePicker
+                        value={endDate.date}
+                        display='default'
+                        onChange={(e, date) => {
+                            setOpenModal(false)
+                            setEndDate({
+                                ...endDate,
+                                date
+                            })
+                        }}
+                        onTouchCancel={() => setOpenModal(false)}
+                        minimumDate={initDate.date}
+                    />}
+
+                    {openModal.endTime && <DateTimePicker
+                        value={endDate.date}
+                        display='default'
+                        mode='time'
+                        onChange={(e, date) => {
+                            setOpenModal(false)
+                            setEndDate({
+                                ...endDate,
+                                time: date.toLocaleTimeString()
+                            })
+                        }}
+                        onTouchCancel={() => setOpenModal(false)}
+                    />}
+
+                    <Text style={styles.label}>Motivo:</Text>
+                    <CustomPicker options={motivos} onValueChange={(value) => setMotivo(value)} selectedValue={motivo} placeHolder={motivo ?
+                        motivos.find((motivoL) => motivoL.value.toString() === motivo.toString()).label :
+                        `Seleccione un motivo`
+                    } />
+
+
+                    <Text style={{
+                        ...styles.label,
+                        marginTop: 20,
+                    }}>Horario:</Text>
+                    <CustomPicker options={horarios} onValueChange={(value) => setHorario(value)} selectedValue={horario} placeHolder={
+                        horario ?
+                            horarios.find((horarioL) => horarioL.value.toString() === horario.toString()).label :
+                            `Seleccione un horario`
+                    } />
+
+                    <Text style={{
+                        ...styles.label,
+                        marginTop: 20,
+                    }}>Observación:</Text>
+                    <TextInput
+                        style={{
+                            ...styles.input,
+                            height: 60,
+                        }}
+                        onChangeText={(text) => setObservacion(text)}
+                        value={form.observacion}
+                        placeholder='Observación'
+                        placeholderTextColor={colors.gray}
+                        multiline={true}
+                    />
+
+                    <ReplaceWithLoading>
+                        <TouchableOpacity style={[styles.buttonAlt, {
+                            marginVertical: 20,
+                        }]} onPress={() => {
+                            setDangerModal({
+                                visible: true,
+                                title: 'Guardar cambios',
+                                text: '¿Está seguro que desea guardar estos cambios?',
+                                bg: colors.white,
+                                color: colors.black,
+                                buttons: [
+                                    {
+                                        text: 'Cancelar',
+                                        onPress: () => setDangerModal({ visible: false })
+                                    },
+                                    {
+                                        text: 'Aceptar',
+                                        onPress: () => handleSaveData()
+                                    }
+                                ]
+                            })
+                        }}>
+                            <Text style={styles.buttonText}>Guardar cambios</Text>
+                        </TouchableOpacity>
+                    </ReplaceWithLoading>
+                </View>
+            </ScrollView>
+
+            <Navbar
+                position={observacionAbierto ? 'relative' : 'absolute'}
+            />
         </View>
     )
 }

@@ -24,6 +24,7 @@ export default function ChoseEnterprise() {
         borderBottomColor: '#E2EFF7',
         borderBottomWidth: 1,
         paddingBottom: 20,
+        textAlign: 'center',
       }}>
         Cuenta
       </Text>

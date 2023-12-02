@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import styles from '../styles/styles'
 import { useNavigate } from 'react-router-native'
@@ -14,8 +14,8 @@ export default function Configuration() {
     const { setSnackbar, setLoading, user, setUser } = useContext(dataContext)
     const navigate = useNavigate()
     const [form, setForm] = useState({
-        document: user.nroDocIde,
-        password: user.password
+        document: '',
+        password: ''
     })
 
     const handleSaveData = async () => {
@@ -71,8 +71,44 @@ export default function Configuration() {
         }
     }
 
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                setLoading(true)
+                const document = await AsyncStorage.getItem('document')
+                const password = await AsyncStorage.getItem('password')
+
+                setForm({
+                    document,
+                    password
+                })
+
+                setLoading(false)
+            } catch (error) {
+                console.log(error)
+                setLoading(false)
+            }
+        }
+
+        getData()
+    }, [])
+
     return (
         <View style={[styles.mainWhite]}>
+
+            <Text style={{
+                width: '100%',
+                borderBottomColor: '#E2EFF7',
+                borderBottomWidth: 1,
+                paddingBottom: 20,
+                textAlign: 'center',
+                marginBottom: 20,
+                position: 'absolute',
+                top: 70,
+            }}>
+                Configuración
+            </Text>
+
             <ReplaceWithLoading>
                 <View style={styles.flexColumn}>
                     <Text style={styles.label}>Ingresa el número de tu documento:</Text>

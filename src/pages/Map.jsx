@@ -90,6 +90,17 @@ export default function Home() {
 
   return (
     <View style={[styles.mainWhite]}>
+      
+      <Text style={{
+        width: '100%',
+        borderBottomColor: '#E2EFF7',
+        borderBottomWidth: 1,
+        paddingBottom: 10,
+        textAlign: 'center',
+        marginBottom: 20,
+      }}>
+        Registro de Asistencia
+      </Text>
 
       <View style={[styles.flexRow, {
         alignItems: 'center',

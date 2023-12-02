@@ -93,6 +93,19 @@ export default function PersonalData() {
   return (
     <View style={[styles.mainWhite]}>
 
+    <Text style={{
+        width: '100%',
+        borderBottomColor: '#E2EFF7',
+        borderBottomWidth: 1,
+        paddingBottom: 20,
+        textAlign: 'center',
+        marginBottom: 20,
+        position: 'absolute',
+        top: 70,
+    }}>
+        Datos personales
+    </Text>
+
       <View style={styles.flexColumn}>
         <Text style={styles.label}>Número de identificación:</Text>
         <TextInput style={styles.input} value={form.idTrabajador} editable={false} placeholder='Número de identificación' />
@@ -119,13 +132,6 @@ export default function PersonalData() {
             <Text style={styles.buttonText}>Guardar cambios</Text>
           </TouchableOpacity>
         </ReplaceWithLoading>
-
-        <TouchableOpacity style={[styles.buttonAlt, {
-          marginTop: 20,
-          backgroundColor: '#dc3545'
-        }]} onPress={() => logout()}>
-          <Text style={styles.buttonText}>Cerrar sesión</Text>
-        </TouchableOpacity>
       </View>
 
       <Navbar />
