@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import styles from '../styles/styles'
 import { useNavigate } from 'react-router-native'
@@ -6,7 +6,6 @@ import routes from '../router/routes'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dataContext } from '../context/dataContext'
 import ReplaceWithLoading from '../components/ReplaceWithLoading'
-import axios from 'axios'
 import petitions from '../api/calls'
 
 export default function Init() {
@@ -72,9 +71,10 @@ export default function Init() {
 
     useState(() => {
         const checkIfDocumentExists = async () => {
-            setLoading(true)
             const document = await AsyncStorage.getItem('document')
-            const password = await AsyncStorage.getItem('password')
+            const password = await AsyncStorage.getItem('password') 
+
+            if (!document || !password) return setLoading(false)
 
             const verify = await petitions.getUserInfo({
                 dni: document,
@@ -107,6 +107,9 @@ export default function Init() {
         }
 
         checkIfDocumentExists()
+    }, [])
+
+    useEffect(() => {
     }, [])
 
     return (

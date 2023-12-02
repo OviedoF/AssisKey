@@ -35,7 +35,7 @@ export default function Navbar({position = "absolute"}) {
         <Text>Inicio</Text>
       </TouchableOpacity>
 
-      {user.nivel == 1 && <TouchableOpacity style={[styles.flexColumn, {
+      {parseInt(user.nivel) == 1 && <TouchableOpacity style={[styles.flexColumn, {
         width: '25%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -56,7 +56,7 @@ export default function Navbar({position = "absolute"}) {
         <Text>Historial</Text>
       </TouchableOpacity>
 
-      {user.nivel == 0 && <TouchableOpacity style={[styles.flexColumn, {
+      {parseInt(user.nivel) == 0 && <TouchableOpacity style={[styles.flexColumn, {
         width: '25%',
         alignItems: 'center',
         justifyContent: 'center',

@@ -73,8 +73,6 @@ export default function Login() {
         type: 'success'
       })
 
-      setLoading(false)
-
       return navigate(routes.init)
     } catch (error) {
       console.log(error)

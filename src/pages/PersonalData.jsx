@@ -47,20 +47,22 @@ export default function PersonalData() {
 
       const updateRes = updateReq.data[0]
 
-      const user = await petitions.getUserInfo({
+      const userRes = await petitions.getUserInfo({
         dni: form.idTrabajador,
         codigo: form.verifyCode,
         idDB: form.idDB,
         Authorization: form.Authorization
       })
 
-      if (!user.data.length) return setSnackbar({
+      if (!userRes.data.length) return setSnackbar({
         visible: true,
         text: 'Error al actualizar los datos',
         type: 'error'
       })
 
-      const userInfo = user.data[0]
+      console.log(Object.keys(userRes.data[0]))
+
+      const userInfo = userRes.data[0]
 
       setUser({
         ...user,
@@ -83,11 +85,6 @@ export default function PersonalData() {
         type: 'error'
       })
     }
-  }
-
-  const logout = async () => {
-    setUser({})
-    navigate(routes.login)
   }
 
   return (
