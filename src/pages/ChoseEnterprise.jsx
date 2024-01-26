@@ -7,11 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dataContext } from '../context/dataContext'
 import ReplaceWithLoading from '../components/ReplaceWithLoading'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faAngleLeft, faAngleRight, faArrowLeft, faBuilding } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faAngleRight, faArrowLeft, faArrowRight, faBuilding } from '@fortawesome/free-solid-svg-icons'
 import logo from '../../assets/chooseEnterprise.png'
-import petitions from '../api/calls'
 
 export default function ChoseEnterprise() {
+    const [page, setPage] = useState(1)
     const { setSnackbar, setLoading, user, setUser } = useContext(dataContext)
     const navigate = useNavigate()
 
@@ -50,12 +50,14 @@ export default function ChoseEnterprise() {
         <View style={[styles.mainWhite, {
             position: 'relative',
         }]}>
-            <FontAwesomeIcon icon={faAngleLeft} size={30} style={{
-                position: 'absolute',
-                top: 50,
-                left: 10,
-                color: colors.green,
-            }} onPress={() => navigate(routes.login)} />
+            <TouchableOpacity onPress={() => navigate(routes.login)} >
+                <FontAwesomeIcon icon={faAngleLeft} size={30} style={{
+                    position: 'absolute',
+                    top: 50,
+                    left: 10,
+                    color: colors.green,
+                }} />
+            </TouchableOpacity>
 
             <Image source={logo} style={{
                 width: 150,
@@ -77,7 +79,7 @@ export default function ChoseEnterprise() {
             }]}>Nos alegra que tengas varias empresas, Selecciona con la que deseas ingresar.</Text>
 
             <ReplaceWithLoading>
-                {user.empresas.map((empresa, index) => (
+                {user.empresas.slice((page - 1) * 4, page * 4).map((empresa, index) => (
                     <TouchableOpacity key={index} style={{
                         width: '100%',
                         display: 'flex',
@@ -108,6 +110,30 @@ export default function ChoseEnterprise() {
                     </TouchableOpacity>
                 ))}
             </ReplaceWithLoading>
+
+            <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
+                marginTop: 20,
+            }}>
+                <TouchableOpacity onPress={() => page > 1 && setPage(page - 1)}>
+                    <FontAwesomeIcon icon={faArrowLeft} size={30} style={{
+                        color: page === 1 ? '#00000050' : '#000000',
+                    }} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => {
+                    console.log(page, user.empresas.length)
+                    if (page * 4 >= user.empresas.length) return
+                    setPage(page + 1)
+                }}>
+                    <FontAwesomeIcon icon={faArrowRight} size={30} style={{
+                        color: (page * 4 >= user.empresas.length) ? '#00000050' : '#000000',
+                    }} />
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }

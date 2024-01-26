@@ -54,9 +54,12 @@ export default function Home() {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') return setSnackbar({ visible: true, text: 'Debe conceder permisos a la ubicación', type: 'error' });
 
-      let location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Highest,
-      });
+      let location = await Promise.race([
+        Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest }),
+        new Promise((resolve) => setTimeout(resolve, 5000, { coords: { latitude: 0, longitude: 0 } }))
+      ]);
+
+      console.log(location)
 
       const document = await AsyncStorage.getItem('document')
 
