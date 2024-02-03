@@ -44,7 +44,7 @@
         "android.permission.FOREGROUND_SERVICE"
       ],
       "package": "com.bms.assiskey",
-      "versionCode": 7
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/favicon.png"

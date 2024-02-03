@@ -14,4 +14,6 @@ export default {
     operar: "/operar",
     incidencias: "/incidencias",
     crearIncidencia: "/crear-incidencia",
+    terms: "/terms",
+    recovery: "/recovery",
 }

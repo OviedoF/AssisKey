@@ -29,7 +29,7 @@ export default function Login() {
 
       const response = await petitions.login(form)
 
-      if(!response.data.empresas) {
+      if (!response.data.empresas) {
         setLoading(false)
         return setSnackbar({
           visible: true,
@@ -47,7 +47,7 @@ export default function Login() {
         })
       }
 
-      if(response.data.empresas.length > 1) {
+      if (response.data.empresas.length > 1) {
         setUser({
           clave: form.clave,
           empresas: response.data.empresas,
@@ -85,7 +85,17 @@ export default function Login() {
     }
   }
 
+  const acceptTerms = async () => {
+    const accept = await AsyncStorage.getItem('terms')
+    console.log(accept)
+    if (accept) return
+
+    navigate(routes.terms)
+  }
+
   useEffect(() => {
+    acceptTerms()
+
     AsyncStorage.getItem('username').then((value) => {
       if (value) {
         setForm({
@@ -125,7 +135,9 @@ export default function Login() {
             textAlign: 'right',
             marginBottom: 20,
             opacity: 0.5
-          }]}>¿Olvidaste tu contraseña?</Text>
+          }]} onPress={
+            () => navigate(routes.recovery)
+          }>¿Olvidaste tu contraseña?</Text>
           <TouchableOpacity style={[styles.buttonAlt, {
             marginTop: 10
           }]} onPress={() => handleLogin()}>

@@ -191,4 +191,21 @@ petitions.crearPermiso = (form) => {
     }
 }
 
+// Recover Password
+
+petitions.recoverPassword = (form) => {
+    try {
+        const data = request.get(`/sendPassGmail`, {
+            headers: {
+                ...form,
+            }
+        });
+        return data;
+    }
+    catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
 export default petitions;
