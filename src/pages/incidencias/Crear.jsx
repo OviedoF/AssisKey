@@ -10,16 +10,20 @@ import petitions from '../../api/calls'
 import ReplaceWithLoading from '../../components/ReplaceWithLoading'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomPicker from '../../components/CustomPicker'
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faClipboard, faFile, faPaperclip } from '@fortawesome/free-solid-svg-icons'
 
 export default function Crear() {
     const [openModal, setOpenModal] = useState({})
     const [initDate, setInitDate] = useState({
         date: new Date(),
-        time: new Date().toLocaleTimeString(),
+        time: '',
     })
     const [endDate, setEndDate] = useState({
         date: new Date(),
-        time: new Date().toLocaleTimeString(),
+        time: '',
     })
     const [motivo, setMotivo] = useState('')
     const [horarios, setHorarios] = useState([])
@@ -115,28 +119,84 @@ export default function Crear() {
         getDocument()
     }, [])
 
+    const handleFileUpload = async () => {
+        try {
+            const res = await DocumentPicker.getDocumentAsync({
+                type: '*/*',
+            });
+
+            const fileInfo = await FileSystem.getInfoAsync(
+                res.assets[0].uri,
+                { size: true }
+            )
+
+            if (!fileInfo.exists) {
+                return setSnackbar({
+                    visible: true,
+                    text: 'El archivo seleccionado no existe',
+                    type: 'error'
+                })
+            }
+
+            const base64Content = await FileSystem.readAsStringAsync(res.assets[0].uri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+
+            setForm({
+                ...form,
+                file: base64Content,
+                fileName: res.assets[0].name,
+            })
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const handleSaveData = async () => {
         try {
             setLoading(true)
             const fInicio = `${initDate.date.toLocaleDateString().replaceAll('/', '-')} ${initDate.time.split(' ')[0]}`
             const fFin = `${endDate.date.toLocaleDateString().replaceAll('/', '-')} ${endDate.time.split(' ')[0]}`
 
-            setLoading(false)
+            const formData = new FormData()
+
+            formData.append('name', form.fileName || '')
+            formData.append('file', form.file || '')
 
             const create = await petitions.crearPermiso({
                 idTrabajador: user.id,
                 fInicio,
                 fFin,
-                estado: "1",
+                estado: "2",
                 idMotivo: motivo,
                 idHorario: horario,
                 idDB: user.idEmpresa,
                 Authorization: user.token,
                 observacion,
-            })
+            }, formData)
 
             if (create.data[0].cod === 'Okey') {
                 setLoading(false)
+
+                setMotivo('')
+                setHorario('')
+                setObservacion('')
+                setForm({
+                    ...form,
+                    file: '',
+                    fileName: '',
+                })
+                setInitDate({
+                    date: new Date(),
+                    time: '',
+                })
+                setEndDate({
+                    date: new Date(),
+                    time: '',
+                })
+
+                setLoading(false)
+
                 return setSnackbar({
                     visible: true,
                     text: create.data[0].msg,
@@ -156,8 +216,6 @@ export default function Crear() {
 
     return (
         <View style={[styles.mainWhite]} keyboardShouldPersistTaps="handled">
-
-
             <Text style={{
                 width: '100%',
                 borderBottomColor: '#E2EFF7',
@@ -200,8 +258,45 @@ export default function Crear() {
             </View>
 
             <ScrollView>
+                <View style={{
+                    ...styles.flexColumn,
+                    paddingHorizontal: 5,
+                    paddingTop: 10,
+                }}>
 
-                <View style={styles.flexColumn}>
+                    <CustomPicker options={horarios} onValueChange={(value) => {
+                        setHorario(value)
+                        const patron = /de (\d{2}:\d{2}:\d{2}) a (\d{2}:\d{2}:\d{2})/;
+                        const horario = horarios.find((horarioL) => horarioL.value.toString() === value.toString())
+                        const horarioMatch = horario.label.match(patron)
+
+                        if (horarioMatch) {
+                            const horarioEnd = horarioMatch[2]
+                            const horarioStart = horarioMatch[1]
+                            const date = new Date()
+
+                            setInitDate({
+                                date,
+                                time: new Date(date.setHours(horarioStart.split(':')[0], horarioStart.split(':')[1], horarioStart.split(':')[2])).toLocaleTimeString()
+                            })
+
+                            setEndDate({
+                                date,
+                                time: new Date(date.setHours(horarioEnd.split(':')[0], horarioEnd.split(':')[1], horarioEnd.split(':')[2])).toLocaleTimeString()
+                            })
+                        } else {
+                            setSnackbar({
+                                visible: true,
+                                text: 'No se encontró el horario seleccionado',
+                                type: 'error'
+                            })
+                        }
+                    }} selectedValue={horario} placeHolder={
+                        horario ?
+                            horarios.find((horarioL) => horarioL.value.toString() === horario.toString()).label :
+                            `Seleccione un horario`
+                    } title={'Horario:'} />
+
                     <Text style={styles.label}>Fecha y Hora de inicio:</Text>
                     <View style={{
                         flexDirection: 'row',
@@ -229,8 +324,10 @@ export default function Crear() {
                         }} onPress={() => setOpenModal({
                             initTime: true,
                         })}>
-                            <Text>{
-                                initDate.time
+                            <Text style={{
+                                fontSize: initDate.time ? 14 : 10,
+                            }}>{
+                                initDate.time || 'Seleccione una hora'
                             }</Text>
                         </TouchableOpacity>
                     </View>
@@ -254,6 +351,7 @@ export default function Crear() {
                         mode='time'
                         onChange={(e, date) => {
                             setOpenModal(false)
+                            console.log(date)
                             setInitDate({
                                 ...initDate,
                                 time: date.toLocaleTimeString()
@@ -289,9 +387,11 @@ export default function Crear() {
                         }} onPress={() => setOpenModal({
                             endTime: true,
                         })}>
-                            <Text>{
-                                endDate.time
-                            }</Text>
+                            <Text style={{
+                                fontSize: endDate.time ? 14 : 10,
+                            }}>{
+                                    endDate.time || 'Seleccione una hora'
+                                }</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -323,27 +423,13 @@ export default function Crear() {
                         }}
                         onTouchCancel={() => setOpenModal(false)}
                     />}
-
-                    <Text style={styles.label}>Motivo:</Text>
                     <CustomPicker options={motivos} onValueChange={(value) => setMotivo(value)} selectedValue={motivo} placeHolder={motivo ?
                         motivos.find((motivoL) => motivoL.value.toString() === motivo.toString()).label :
                         `Seleccione un motivo`
-                    } />
-
-
-                    <Text style={{
-                        ...styles.label,
-                        marginTop: 20,
-                    }}>Horario:</Text>
-                    <CustomPicker options={horarios} onValueChange={(value) => setHorario(value)} selectedValue={horario} placeHolder={
-                        horario ?
-                            horarios.find((horarioL) => horarioL.value.toString() === horario.toString()).label :
-                            `Seleccione un horario`
-                    } />
+                    } title={'Motivo:'} />
 
                     <Text style={{
-                        ...styles.label,
-                        marginTop: 20,
+                        ...styles.label
                     }}>Observación:</Text>
                     <TextInput
                         style={{
@@ -351,11 +437,51 @@ export default function Crear() {
                             height: 60,
                         }}
                         onChangeText={(text) => setObservacion(text)}
-                        value={form.observacion}
+                        value={observacion}
                         placeholder='Observación'
                         placeholderTextColor={colors.gray}
                         multiline={true}
                     />
+
+                    <Text style={{
+                        ...styles.label,
+                        marginTop: 20,
+                        textAlign: 'center',
+                    }}>Si tienes un sustento, adjúntalo:</Text>
+
+                    <TouchableOpacity style={{
+                        ...styles.buttonAlt,
+                        marginTop: 20,
+                        borderRadius: 5,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#E7EAFD',
+                        borderWidth: 1,
+                        borderColor: colors.blue,
+                    }} onPress={() => handleFileUpload()}>
+                        <FontAwesomeIcon icon={faPaperclip} size={20} color={colors.blue} style={{
+                            marginRight: 10
+                        }} />
+
+                        <Text style={{
+                            ...styles.buttonText,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: colors.blue
+                        }}>
+                            Adjunta AQUÍ
+                        </Text>
+                    </TouchableOpacity>
+
+                    {form.fileName && <Text style={{
+                        textAlign: 'center',
+                        color: colors.blue,
+                        marginBottom: 20,
+                    }}>{form.fileName}</Text>}
 
                     <ReplaceWithLoading>
                         <TouchableOpacity style={[styles.buttonAlt, {

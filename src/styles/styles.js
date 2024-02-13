@@ -72,7 +72,7 @@ export default StyleSheet.create({
         borderBottomWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     inputWhite: {
         width: '100%',

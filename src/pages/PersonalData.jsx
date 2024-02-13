@@ -60,8 +60,6 @@ export default function PersonalData() {
         type: 'error'
       })
 
-      console.log(Object.keys(userRes.data[0]))
-
       const userInfo = userRes.data[0]
 
       setUser({

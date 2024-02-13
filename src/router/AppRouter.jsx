@@ -17,6 +17,7 @@ import Incidencias from "../pages/incidencias/Incidencias";
 import Crear from "../pages/incidencias/Crear";
 import Terms from "../pages/Terms";
 import Recovery from "../pages/Recovery";
+import TakeSelfie from "../pages/TakeSelfie";
 
 const AppRouter = () => {
   return (
@@ -38,6 +39,7 @@ const AppRouter = () => {
       <Route exact path={routes.crearIncidencia} element={<Crear />} />
       <Route exact path={routes.terms} element={<Terms />} />
       <Route exact path={routes.recovery} element={<Recovery />} />
+      <Route exact path={routes.takeSelfie} element={<TakeSelfie />} />
     </Routes>
   );
 };

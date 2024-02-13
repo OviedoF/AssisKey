@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native'
 import styles from '../styles/styles'
 import { useNavigate } from 'react-router-native'
 import routes from '../router/routes'
@@ -11,12 +11,14 @@ import petitions from '../api/calls'
 import * as Location from 'expo-location';
 import ReplaceWithLoading from '../components/ReplaceWithLoading'
 import { Buffer } from 'buffer'
+import { Camera } from 'expo-camera';
 
 export default function Home() {
   const [optionSelected, setOptionSelected] = useState(2)
   const [assistIndicator, setAssistIndicator] = useState(null)
   const [userInfo, setUserInfo] = useState({})
   const [userImage, setUserImage] = useState('')
+  const [logoEmpresa, setLogoEmpresa] = useState('')
   const navigate = useNavigate()
   const { user, setSnackbar, setLoading, setQrForEntry } = useContext(dataContext)
 
@@ -35,7 +37,7 @@ export default function Home() {
         Authorization
       }, user.token)
 
-      if(!response.data[0]) return setLoading(false)
+      if (!response.data[0]) return setLoading(false)
 
       if (response.data.length > 0) {
         setAssistIndicator(response.data[0].indicador)
@@ -44,7 +46,8 @@ export default function Home() {
     } catch (error) {
       setLoading(false)
       console.log(error)
-      return setSnackbar({ visible: true, text: 'Error al obtener los datos', type: 'error' })
+      navigate(routes.login)
+      return setSnackbar({ visible: true, text: 'Ha vencido la sesión', type: 'error' })
     }
   }
 
@@ -59,11 +62,9 @@ export default function Home() {
         new Promise((resolve) => setTimeout(resolve, 5000, { coords: { latitude: 0, longitude: 0 } }))
       ]);
 
-      console.log(location)
-
       const document = await AsyncStorage.getItem('document')
 
-      if(!document) {
+      if (!document) {
         setLoading(false)
         return setSnackbar({ visible: true, text: 'Error al obtener el DNI', type: 'error' })
       }
@@ -90,7 +91,7 @@ export default function Home() {
       setLoading(false)
     } catch (error) {
       console.log(error)
-      setLoading(false) 
+      setLoading(false)
       navigate(routes.login)
       return setSnackbar({
         visible: true,
@@ -106,7 +107,7 @@ export default function Home() {
 
       const document = await AsyncStorage.getItem('document')
 
-      if(!document) {
+      if (!document) {
         setLoading(false)
         return setSnackbar({ visible: true, text: 'Error al obtener el DNI', type: 'error' })
       }
@@ -186,18 +187,64 @@ export default function Home() {
       setUserImage(`data:image/jpeg;base64,${buffer.toString('base64')}`)
     }
 
+    const logoEmpresaSetter = async () => {
+      const logo = user.empresas.filter(e => e.idEmpresa === user.idEmpresa)[0].logo
+      const buffer = Buffer.from(logo, 'base64');
+
+      setLogoEmpresa(`data:image/jpeg;base64,${buffer.toString('base64')}`)
+    }
+
     getUserInfo()
     getData()
     getUserImage()
+    logoEmpresaSetter()
   }, [])
 
   return (
     <View style={[styles.mainWhite]}>
+      <View style={{
+        position: 'absolute',
+        top: 50,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 0,
+        height: 50,
+        backgroundColor: '#3F47CC',
+        borderRadius: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+      }}>
+        <Image src={logoEmpresa} style={{
+          width: 50,
+          height: '100%',
+          objectFit: 'contain',
+          marginBottom: 20,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          top: '2.5%',
+        }} />
+
+        <Text style={{
+          color: 'white',
+          fontSize: 11,
+          marginLeft: 10
+        }}>
+          {user.rSocial}
+        </Text>
+      </View>
+
       <View style={[styles.flexColumn, {
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        position: 'relative',
       }]}>
+
         <Text style={[styles.title, {
           fontSize: 20,
           marginBottom: 20
@@ -211,13 +258,29 @@ export default function Home() {
           <Text style={[styles.textBold, { textAlign: 'center' }]}>DNI:</Text> {userInfo.document}
         </Text>
 
-        {userImage && <Image src={userImage} style={{
-          width: 150,
-          height: 150,
-          marginBottom: 20,
-          objectFit: 'contain',
-          borderRadius: 100,
-        }} />}
+        {userImage && <TouchableOpacity onPress={
+          () => {
+            Alert.alert('Foto de perfil', '¿Desea actualizar su foto de perfil sacándose una selfie?', [
+              {
+                text: 'Cancelar',
+                onPress: () => { },
+                style: 'cancel'
+              },
+              {
+                text: 'Actualizar',
+                onPress: () => navigate(routes.takeSelfie)
+              }
+            ])
+          }
+        }>
+          <Image src={userImage} style={{
+            width: 150,
+            height: 150,
+            marginBottom: 20,
+            objectFit: 'cover',
+            borderRadius: 100,
+          }} />
+        </TouchableOpacity>}
 
         <RadioGroup
           radioButtons={optionsRadio}

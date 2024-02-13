@@ -33,6 +33,8 @@ export default function Init() {
                 Authorization: user.token
             })
 
+            console.log(verify)
+
             if (verify.data[0] && verify.data[0] === "Empleado no encontrado") {
                 setLoading(false)
                 return setSnackbar({

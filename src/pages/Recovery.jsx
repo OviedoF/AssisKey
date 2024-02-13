@@ -22,8 +22,6 @@ export default function Recovery() {
                 Observacion: ''
             })
 
-            console.log(res.data)
-
             if (res.data === "Correo no encontrado") {
                 setSnackbar({
                     visible: true,
@@ -40,7 +38,6 @@ export default function Recovery() {
             })
             navigate(routes.login)
         } catch (e) {
-            console.log(e)
             setSnackbar({
                 visible: true,
                 text: 'Ha ocurrido un error al enviar el correo',

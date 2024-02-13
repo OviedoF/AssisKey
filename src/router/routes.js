@@ -16,4 +16,5 @@ export default {
     crearIncidencia: "/crear-incidencia",
     terms: "/terms",
     recovery: "/recovery",
+    takeSelfie: "/take-selfie",
 }

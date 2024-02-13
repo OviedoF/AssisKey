@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
 import { colors } from '../styles/styles';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
-const CustomPicker = ({ options, selectedValue, onValueChange, placeHolder }) => {
+const CustomPicker = ({ options, title, onValueChange, placeHolder }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handlePress = (value) => {
@@ -12,8 +14,17 @@ const CustomPicker = ({ options, selectedValue, onValueChange, placeHolder }) =>
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
+
       <TouchableOpacity style={styles.pickerButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.pickerButtonText}>{placeHolder}</Text>
+        <Text style={{
+          ...styles.pickerButtonText,
+          color: placeHolder.includes('Seleccione') ? '#00000050' : '#000000'
+        }}>{placeHolder}</Text>
+
+        {placeHolder.includes('Seleccione') && (
+          <FontAwesomeIcon icon={faAngleDown} size={20} color="#00000050" />
+        )}
       </TouchableOpacity>
 
       <Modal
@@ -46,10 +57,24 @@ const CustomPicker = ({ options, selectedValue, onValueChange, placeHolder }) =>
 };
 
 const styles = StyleSheet.create({
+  title: {
+    position: 'absolute',
+    top: -10,
+    left: 10,
+    zIndex: 2,
+    backgroundColor: colors.white,
+    paddingHorizontal: 5,
+    color: colors.black,
+  },
   pickerButton: {
     borderRadius: 5,
-    padding: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
     alignItems: 'flex-start',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.white,
   },
   pickerButtonText: {
     fontSize: 16,
@@ -84,6 +109,12 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: 'white',
   },
+  container: {
+    marginBottom: 20,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#00000050'
+  }
 });
 
 export default CustomPicker;

@@ -125,7 +125,6 @@ export default function ChoseEnterprise() {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
-                    console.log(page, user.empresas.length)
                     if (page * 4 >= user.empresas.length) return
                     setPage(page + 1)
                 }}>

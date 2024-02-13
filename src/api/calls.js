@@ -177,11 +177,14 @@ petitions.getEstados = (form) => {
     }
 }
 
-petitions.crearPermiso = (form) => {
+petitions.crearPermiso = (form, body) => {
     try {
-        const data = request.get(`/permiso`, {
+        const data = request.post('/permiso', body, {
             headers: {
                 ...form,
+                'Content-Type': 'multipart/form-data',
+                Accept: '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
             }
         });
         return data;
@@ -203,6 +206,25 @@ petitions.recoverPassword = (form) => {
         return data;
     }
     catch (error) {
+        console.log(error);
+        return data;
+    }
+}
+
+// Cambiar selfie
+
+petitions.changeSelfie = (form, body) => {
+    try {
+        const data = request.post('/image', body, {
+            headers: {
+                ...form,
+                'Content-Type': 'multipart/form-data',
+                Accept: '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+            }
+        });
+        return data;
+    } catch (error) {
         console.log(error);
         return data;
     }
