@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ScrollView, Text, TextInput, TouchableOpacity, View, Dimensions } from 'react-native'
+import { ScrollView, Text, TextInput, TouchableOpacity, View, Dimensions, Alert } from 'react-native'
 import styles, { colors } from '../../styles/styles'
 import { useNavigate } from 'react-router-native'
 import routes from '../../router/routes'
@@ -160,8 +160,12 @@ export default function Crear() {
 
             const formData = new FormData()
 
-            formData.append('name', form.fileName || '')
-            formData.append('file', form.file || '')
+            formData.append('name', form.fileName ? form.fileName : '')
+            formData.append('file', form.file ? form.file : '')
+
+            Alert.alert('++ Datos', `Estado: 2\n`)
+            Alert.alert('+ Datos', `IDTrabajador: ${user.id}\nIDDB: ${user.idEmpresa}\nAuthorization: ${user.token}`)
+            Alert.alert('Datos', `Fecha de inicio: ${fInicio}\nFecha de fin: ${fFin}\nMotivo: ${motivo}\nIDHorario: ${horario}\nObservación: ${observacion}`)
 
             const create = await petitions.crearPermiso({
                 idTrabajador: user.id,
@@ -175,34 +179,34 @@ export default function Crear() {
                 observacion,
             }, formData)
 
-            if (create.data[0].cod === 'Okey') {
-                setLoading(false)
+            console.log(create.data)
 
-                setMotivo('')
-                setHorario('')
-                setObservacion('')
-                setForm({
-                    ...form,
-                    file: '',
-                    fileName: '',
-                })
-                setInitDate({
-                    date: new Date(),
-                    time: '',
-                })
-                setEndDate({
-                    date: new Date(),
-                    time: '',
-                })
+            setLoading(false)
 
-                setLoading(false)
+            setMotivo('')
+            setHorario('')
+            setObservacion('')
+            setForm({
+                ...form,
+                file: '',
+                fileName: '',
+            })
+            setInitDate({
+                date: new Date(),
+                time: '',
+            })
+            setEndDate({
+                date: new Date(),
+                time: '',
+            })
 
-                return setSnackbar({
-                    visible: true,
-                    text: create.data[0].msg,
-                    type: 'success'
-                })
-            }
+            setLoading(false)
+
+            return setSnackbar({
+                visible: true,
+                text: create.data[0].msg,
+                type: 'success'
+            })
         } catch (error) {
             setLoading(false)
             navigate(routes.login)
@@ -213,6 +217,10 @@ export default function Crear() {
             })
         }
     }
+
+    useEffect(() => {
+        console.log(initDate, endDate)
+    }, [initDate, endDate])
 
     return (
         <View style={[styles.mainWhite]} keyboardShouldPersistTaps="handled">
@@ -277,12 +285,12 @@ export default function Crear() {
 
                             setInitDate({
                                 date,
-                                time: new Date(date.setHours(horarioStart.split(':')[0], horarioStart.split(':')[1], horarioStart.split(':')[2])).toLocaleTimeString()
+                                time: horarioStart
                             })
 
                             setEndDate({
                                 date,
-                                time: new Date(date.setHours(horarioEnd.split(':')[0], horarioEnd.split(':')[1], horarioEnd.split(':')[2])).toLocaleTimeString()
+                                time: horarioEnd
                             })
                         } else {
                             setSnackbar({
@@ -351,10 +359,14 @@ export default function Crear() {
                         mode='time'
                         onChange={(e, date) => {
                             setOpenModal(false)
-                            console.log(date)
                             setInitDate({
                                 ...initDate,
-                                time: date.toLocaleTimeString()
+                                time: date.toLocaleTimeString('en-US', {
+                                    hour12: false,
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit'
+                                })
                             })
                         }}
                         onTouchCancel={() => setOpenModal(false)}
@@ -418,7 +430,12 @@ export default function Crear() {
                             setOpenModal(false)
                             setEndDate({
                                 ...endDate,
-                                time: date.toLocaleTimeString()
+                                time: date.toLocaleTimeString('en-US', {
+                                    hour12: false,
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit'
+                                })
                             })
                         }}
                         onTouchCancel={() => setOpenModal(false)}

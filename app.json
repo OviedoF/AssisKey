@@ -2,7 +2,7 @@
   "expo": {
     "name": "Connect Clock",
     "slug": "assiskey",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bms.assiskey",
-      "buildNumber": "1.0.2",
+      "buildNumber": "1.0.4",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow Connect Clock to access your camera.",
         "NSLocationWhenInUseUsageDescription": "Allow Connect Clock to use your location."
@@ -44,7 +44,7 @@
         "android.permission.FOREGROUND_SERVICE"
       ],
       "package": "com.bms.assiskey",
-      "versionCode": 10
+      "versionCode": 13
     },
     "web": {
       "favicon": "./assets/favicon.png"

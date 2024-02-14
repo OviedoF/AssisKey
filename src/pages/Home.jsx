@@ -11,7 +11,6 @@ import petitions from '../api/calls'
 import * as Location from 'expo-location';
 import ReplaceWithLoading from '../components/ReplaceWithLoading'
 import { Buffer } from 'buffer'
-import { Camera } from 'expo-camera';
 
 export default function Home() {
   const [optionSelected, setOptionSelected] = useState(2)
@@ -188,7 +187,7 @@ export default function Home() {
     }
 
     const logoEmpresaSetter = async () => {
-      const logo = user.empresas.filter(e => e.idEmpresa === user.idEmpresa)[0].logo
+      const logo = user.empresas ? user.empresas.filter(e => e.idEmpresa === user.idEmpresa)[0].logo : user.logo
       const buffer = Buffer.from(logo, 'base64');
 
       setLogoEmpresa(`data:image/jpeg;base64,${buffer.toString('base64')}`)

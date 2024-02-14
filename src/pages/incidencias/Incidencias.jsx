@@ -145,7 +145,7 @@ export default function Home() {
                     borderBottomColor: colors.black,
                     borderBottomWidth: 1,
                     backgroundColor: colors.gray
-                }]} onPress={() => navigate(routes.historial)}>
+                }]} onPress={() => navigate(routes.incidencias)}>
                     <Text style={{ fontSize: 12 }}>Historial</Text>
                 </TouchableOpacity>
 
